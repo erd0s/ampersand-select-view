@@ -63,6 +63,8 @@ function SelectView (opts) {
     this.invalidClass = opts.invalidClass || 'input-invalid';
     this.requiredMessage = opts.requiredMessage || 'Selection required';
 
+    this.shouldValidate = false;
+
     this.onChange = this.onChange.bind(this);
 
     this.render();
@@ -119,6 +121,7 @@ SelectView.prototype.findModelForId = function (id) {
 
 SelectView.prototype.bindDOMEvents = function () {
     this.el.addEventListener('change', this.onChange, false);
+    this.select.addEventListener('blur', this.handleBlur, false);
 };
 
 SelectView.prototype.renderOptions = function () {
@@ -196,7 +199,9 @@ SelectView.prototype.setValue = function (value) {
     }
 
     this.value = value;
-    this.validate();
+    if (this.shouldValidate) {
+        this.validate();
+    }
     this.updateSelectedOption();
     if (this.parent) this.parent.update(this);
 };
@@ -229,6 +234,15 @@ SelectView.prototype.validate = function () {
     }
 
     return this.valid;
+};
+
+SelectView.prototype.beforeSubmit = function() {
+    this.shouldValidate = true;
+    this.validate();
+};
+
+SelectView.prototype.handleBlur = function() {
+    this.shouldValidate = true;
 };
 
 SelectView.prototype.getOptionValue = function (option) {
