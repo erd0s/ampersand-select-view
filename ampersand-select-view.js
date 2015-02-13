@@ -172,6 +172,7 @@ SelectView.prototype.updateSelectedOption = function () {
 SelectView.prototype.remove = function () {
     if (this.el) this.el.parentNode.removeChild(this.el);
     this.el.removeEventListener('change', this.onChange, false);
+    this.select.removeEventListener('blur', this.handleBlur, false);
 };
 
 SelectView.prototype.setValue = function (value) {
